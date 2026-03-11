@@ -6,7 +6,8 @@ import 'package:warden_app/pages/report_page.dart';
 import 'package:warden_app/pages/walkin_page.dart';
 
 class Dashboard extends StatefulWidget {
-  const Dashboard({super.key});
+  final dynamic id;
+  const Dashboard({super.key, required this.id});
 
   @override
   State<Dashboard> createState() => _DashboardState();
