@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:warden_app/api/auth.dart';
 import 'package:warden_app/pages/otp_form.dart';
+
 class Login extends StatefulWidget {
   Login({super.key});
 
@@ -19,14 +20,6 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: Icon(Icons.arrow_back, color: Colors.white),
-        title: Text(
-          "Welcome Back",
-          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
-        ),
-        backgroundColor: Colors.transparent,
-      ),
       // Extend body behind the AppBar/Status bar for a full-screen image look
       extendBodyBehindAppBar: true,
       body: Stack(
@@ -127,16 +120,23 @@ class _LoginState extends State<Login> {
                     ),
                     onPressed: () async {
                       try {
-                        final (data, isSuccessful) = await service.login(phoneController.text);
-                    
+                        final (data, isSuccessful) = await service.login(
+                          phoneController.text.replaceAll(RegExp(r'\s+'), ''),
+                        );
+
                         print("Login success: $isSuccessful");
-                    
+
                         if (!context.mounted) return;
-                    
+
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (ctx) => OtpForm(phone: phoneController.text),
+                            builder: (ctx) => OtpForm(
+                              phone: phoneController.text.replaceAll(
+                                RegExp(r'\s+'),
+                                '',
+                              ),
+                            ),
                           ),
                         );
                       } catch (e) {
@@ -168,29 +168,6 @@ class _LoginState extends State<Login> {
                     ),
                   ),
                 ),
-
-                // Login Link
-                const SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text("Don't have an account? "),
-                    GestureDetector(
-                      onTap: () {
-                        // Navigation logic here
-                        Navigator.of(context).pop();
-                      },
-                      child: const Text(
-                        "Signup",
-                        style: TextStyle(
-                          color: Colors.green,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 40),
               ],
             ),
           ),

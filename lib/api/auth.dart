@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 
@@ -8,16 +7,21 @@ class AuthService {
   String apiUrl = "http://localhost:3000";
   final _storage = const FlutterSecureStorage();
 
-
   Future<(Map<String, dynamic>?, bool)> login(String phoneNo) async {
+    String ethiopianNumber = "+251$phoneNo";
+    print("phoneNo: $ethiopianNumber");
     try {
       final response = await http.post(
         Uri.parse("$apiUrl/warden/sendlogin"),
 
         headers: {"Content-Type": 'application/json'},
-        body: jsonEncode({"phoneNo": phoneNo}),
+        body: jsonEncode({"phoneNo": ethiopianNumber}),
       );
       print(response.body);
+      print(response.statusCode);
+      if (response.body.trim().isEmpty) {
+        return (null, response.statusCode == 201 || response.statusCode == 200);
+      }
       final Map<String, dynamic> data = jsonDecode(response.body);
       if (response.statusCode >= 200 && response.statusCode < 300) {
         return (data, true);
@@ -30,16 +34,23 @@ class AuthService {
     }
   }
 
-   Future<(Map<String, dynamic>?, bool)>  verify(String otp) async {
+  Future<(Map<String, dynamic>?, bool)> verify(
+    String otp,
+    String phoneNo,
+  ) async {
     try {
       final response = await http.post(
-        Uri.parse("$apiUrl/auth/verify"),
+        Uri.parse("$apiUrl/warden/verifylogin"),
 
         headers: {"Content-Type": 'application/json'},
-        body: jsonEncode({"otp": otp}),
+        body: jsonEncode({
+          "otp": otp,
+          "phoneNo": phoneNo,
+          "location": "somewhere",
+        }),
       );
       print(response.body);
-       final Map<String, dynamic> data = jsonDecode(response.body);
+      final Map<String, dynamic> data = jsonDecode(response.body);
       if (response.statusCode == 201) {
         return (data, true);
       } else {
@@ -47,7 +58,7 @@ class AuthService {
       }
     } catch (e) {
       print("Error during registration: $e");
-      return (null,false);
+      return (null, false);
     }
   }
 
@@ -56,13 +67,16 @@ class AuthService {
     String phoneNo,
     String location,
   ) async {
+    print("phoneNo from verifylogin: $phoneNo");
+        String ethiopianNumber = "+251$phoneNo";
+
     try {
       final response = await http.post(
         Uri.parse("$apiUrl/warden/verifylogin"),
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({
           "otp": otp,
-          "phoneNo": phoneNo,
+          "phoneNo": ethiopianNumber,
           "location": location,
         }),
       );
@@ -96,31 +110,5 @@ class AuthService {
 
   Future<void> logout() async {
     await _storage.delete(key: 'token');
-  }
-
-  Future<(Map<String, dynamic>?, bool)> addVehicles(String vehicleCode) async {
-    try {
-      final response = await http.post(
-        Uri.parse("$apiUrl/vehicle"),
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": "Bearer ${await getAccessToken()}",
-        },
-        body: jsonEncode({"licensePlate": vehicleCode}),
-      );
-      final Map<String, dynamic> data = jsonDecode(response.body);
-
-      if (response.statusCode == 201) {
-        return (data, true);
-      } else {
-        debugPrint(
-          "Failed to add vehicle: ${response.body} status code: ${response.statusCode}",
-        );
-        return (null, false);
-      }
-    } catch (e) {
-      debugPrint("Error during vehicle addition: $e");
-      return (null, false);
-    }
   }
 }
