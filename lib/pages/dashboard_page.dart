@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:warden_app/components/app_bar.dart';
 import 'package:warden_app/components/assigned_areas_card.dart';
 import 'package:warden_app/components/card_display.dart';
+import 'package:warden_app/pages/camera_scan.dart';
 import 'package:warden_app/pages/report_page.dart';
 import 'package:warden_app/pages/walkin_page.dart';
 
@@ -45,7 +47,9 @@ class HomeView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) => CameraScan()));
+        },
         child: Icon(Icons.qr_code),
       ),
       appBar: ParkingAppBar(),
@@ -91,3 +95,4 @@ class HomeView extends StatelessWidget {
     );
   }
 }
+
