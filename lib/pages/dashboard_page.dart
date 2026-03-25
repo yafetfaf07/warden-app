@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mobile_scanner/mobile_scanner.dart';
+import 'package:warden_app/api/auth.dart';
 import 'package:warden_app/components/app_bar.dart';
 import 'package:warden_app/components/assigned_areas_card.dart';
 import 'package:warden_app/components/card_display.dart';
@@ -20,7 +20,11 @@ class _DashboardState extends State<Dashboard> {
 
   @override
   Widget build(BuildContext context) {
-    final List<Widget> pages = [HomeView(),ReportPage(), WalkinPage()];
+    final List<Widget> pages = [
+      HomeView(id: widget.id),
+      ReportPage(),
+      WalkinPage(),
+    ];
     return Scaffold(
       body: IndexedStack(index: _currentIndex, children: pages),
       bottomNavigationBar: BottomNavigationBar(
@@ -40,30 +44,59 @@ class _DashboardState extends State<Dashboard> {
   }
 }
 
-class HomeView extends StatelessWidget {
-  const HomeView({super.key});
+class HomeView extends StatefulWidget {
+  final String id;
+  const HomeView({super.key, required this.id});
+
+  @override
+  State<HomeView> createState() => _HomeViewState();
+}
+
+class _HomeViewState extends State<HomeView> {
+  final AuthService _service = AuthService();
+   String username="";
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final (name, isSuccessful) = await _service.getProfile(widget.id);
+
+      setState(() {
+        if (isSuccessful && name != null) {
+          username = name.username;
+        } else if (name == null) {
+          username = "Unknown";
+        }
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.of(context).push(MaterialPageRoute(builder: (context) => CameraScan()));
+          Navigator.of(
+            context,
+          ).push(MaterialPageRoute(builder: (context) => CameraScan()));
         },
         child: Icon(Icons.qr_code),
       ),
-      appBar: ParkingAppBar(),
+      appBar: ParkingAppBar(username: username),
       body: SingleChildScrollView(
         child: Container(
           margin: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-        
+
           child: Column(
             children: [
               Text(
                 "Current Shift",
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
-              Text("Duty started at 8:00", style: TextStyle(color: Colors.grey)),
+              Text(
+                "Duty started at 8:00",
+                style: TextStyle(color: Colors.grey),
+              ),
               const SizedBox(height: 30),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -95,4 +128,3 @@ class HomeView extends StatelessWidget {
     );
   }
 }
-

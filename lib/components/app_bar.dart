@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ParkingAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const ParkingAppBar({super.key});
+  final String username;
+  const ParkingAppBar({super.key, required this.username});
 
   @override
   Size get preferredSize => const Size.fromHeight(80); // Slightly taller for better spacing
@@ -44,7 +45,7 @@ class ParkingAppBar extends StatelessWidget implements PreferredSizeWidget {
                   ),
                 ),
                 Text(
-                  "Officer Marcus",
+                  "Officer $username",
                   style: GoogleFonts.outfit(
                     fontSize: 18,
                     color: const Color(0xFF1A1F36),
