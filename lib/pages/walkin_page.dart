@@ -1,12 +1,36 @@
 import 'package:flutter/material.dart';
-import 'package:intl_phone_number_input/intl_phone_number_input.dart';
+import 'package:warden_app/api/auth.dart';
 import 'package:warden_app/components/recent_checkout_components.dart';
 
-class WalkinPage extends StatelessWidget {
-  WalkinPage({super.key});
+class WalkinPage extends StatefulWidget {
+  final String id;
 
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController phoneController = TextEditingController();
+  const WalkinPage({super.key, required this.id});
+
+  @override
+  State<WalkinPage> createState() => _WalkinPageState();
+}
+
+class _WalkinPageState extends State<WalkinPage> {
+  final AuthService _service = AuthService();
+  String parkingId = "";
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final (name, isSuccessful) = await _service.getProfile(widget.id);
+
+      setState(() {
+        if (isSuccessful && name != null) {
+          parkingId = name.parkingAvenueId;
+        } else if (name == null) {
+          parkingId = "Unknown";
+        }
+      });
+    });
+  }
+
   final TextEditingController licenseController = TextEditingController();
 
   InputDecoration _inputDecoration(String label, String hint) {
@@ -31,7 +55,7 @@ class WalkinPage extends StatelessWidget {
           child: Column(
             children: [
               Container(
-                width: MediaQuery.of(context).size.width * 0.85,
+                width: MediaQuery.of(context).size.width * 0.9,
                 constraints: const BoxConstraints(maxWidth: 420),
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
@@ -59,33 +83,6 @@ class WalkinPage extends StatelessWidget {
                     ),
                     const SizedBox(height: 24),
 
-                    // Name
-                    TextField(
-                      controller: nameController,
-                      decoration: _inputDecoration("Name", "Assefa Kebede"),
-                    ),
-                    const SizedBox(height: 16),
-
-                    // Phone number
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade50,
-                        borderRadius: BorderRadius.circular(14),
-                      ),
-                      child: InternationalPhoneNumberInput(
-                        onInputChanged: (value) {},
-                        initialValue: PhoneNumber(isoCode: 'ET'),
-                        textFieldController: phoneController,
-                        selectorConfig: const SelectorConfig(
-                          selectorType: PhoneInputSelectorType.DIALOG,
-                        ),
-                        inputDecoration: const InputDecoration(
-                          border: InputBorder.none,
-                          hintText: 'Phone number',
-                        ),
-                      ),
-                    ),
                     const SizedBox(height: 16),
 
                     // License Number
@@ -105,7 +102,25 @@ class WalkinPage extends StatelessWidget {
                             borderRadius: BorderRadius.circular(10),
                           ),
                         ),
-                        onPressed: () {},
+                        onPressed: () async {
+                          final (vehicleSession, isSuccess) = await _service
+                              .checkin((licenseController.text), parkingId);
+                          if (vehicleSession != null && isSuccess) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text("Checkin-successful"),
+                                backgroundColor: Colors.green,
+                              ),
+                            );
+                          } else if (vehicleSession == null) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text("Checkin-failed"),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                          }
+                        },
                         child: const Text(
                           "Add Vehicle",
                           style: TextStyle(
@@ -119,12 +134,18 @@ class WalkinPage extends StatelessWidget {
                   ],
                 ),
               ),
-              const SizedBox(height: 20,),
+              const SizedBox(height: 20),
               Container(
                 margin: EdgeInsets.symmetric(horizontal: 10),
                 child: Column(
                   children: [
-                    Text("Recent Checkouts",style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
+                    Text(
+                      "Recent Checkouts",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                     SizedBox(
                       height: 200,
                       child: ListView.builder(

@@ -22,8 +22,8 @@ class _DashboardState extends State<Dashboard> {
   Widget build(BuildContext context) {
     final List<Widget> pages = [
       HomeView(id: widget.id),
-      ReportPage(),
-      WalkinPage(),
+      IncidentReportForm(id:widget.id),
+      WalkinPage(id:widget.id),
     ];
     return Scaffold(
       body: IndexedStack(index: _currentIndex, children: pages),
