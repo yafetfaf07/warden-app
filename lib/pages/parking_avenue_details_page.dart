@@ -46,7 +46,7 @@ class ParkingAvenueDetails extends StatelessWidget {
                 crossAxisCount: 4,
               ),
               itemBuilder: (context, index) {
-                if (index >= 0 && index <=3) {
+                // if (index >= 0 && index <=3) {
                   return ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.green.shade300,
@@ -57,30 +57,30 @@ class ParkingAvenueDetails extends StatelessWidget {
                     onPressed: () {},
                     child: Text(_spots[index], style: TextStyle(color: Colors.white),),
                   );
-                } else if (index >= 3 && index <= 7) {
-                  return ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.red.shade300,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadiusGeometry.circular(8),
-                      ),
-                    ),
-                    onPressed: () {},
-                    child: Text(_spots[index], style: TextStyle(color: Colors.white),),
-                  );
-                } else {
-                  return ElevatedButton(
-                    style: ElevatedButton.styleFrom(
+                // } else if (index >= 3 && index <= 7) {
+                //   return ElevatedButton(
+                //     style: ElevatedButton.styleFrom(
+                //       backgroundColor: Colors.red.shade300,
+                //       shape: RoundedRectangleBorder(
+                //         borderRadius: BorderRadiusGeometry.circular(8),
+                //       ),
+                //     ),
+                //     onPressed: () {},
+                //     child: Text(_spots[index], style: TextStyle(color: Colors.white),),
+                //   );
+                // } else {
+                //   return ElevatedButton(
+                //     style: ElevatedButton.styleFrom(
                       
-                      backgroundColor: Colors.purple.shade300,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadiusGeometry.circular(8),
-                      ),
-                    ),
-                    onPressed: () {},
-                    child: Text(_spots[index], style: TextStyle(color: Colors.white),),
-                  );
-                }
+                //       backgroundColor: Colors.purple.shade300,
+                //       shape: RoundedRectangleBorder(
+                //         borderRadius: BorderRadiusGeometry.circular(8),
+                //       ),
+                //     ),
+                //     onPressed: () {},
+                //     child: Text(_spots[index], style: TextStyle(color: Colors.white),),
+                //   );
+                // }
               },
             ),
           ),

@@ -30,7 +30,7 @@ class AuthService {
       if (response.statusCode >= 200 && response.statusCode < 300) {
         return (data, true);
       } else {
-        return (null, false);
+        return (data, false);
       }
     } catch (e) {
       print("Error during login: $e");

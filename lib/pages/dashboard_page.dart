@@ -89,33 +89,33 @@ class _HomeViewState extends State<HomeView> {
 
           child: Column(
             children: [
-              Text(
-                "Current Shift",
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
-              Text(
-                "Duty started at 8:00",
-                style: TextStyle(color: Colors.grey),
-              ),
+              // Text(
+              //   "Current Shift",
+              //   style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              // ),
+              // Text(
+              //   "Duty started at 8:00",
+              //   style: TextStyle(color: Colors.grey),
+              // ),
               const SizedBox(height: 30),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  CardDisplay(
-                    title: "WORKED",
-                    icon: Icon(Icons.timer_outlined, color: Colors.blue),
-                  ),
-                  CardDisplay(
-                    title: "REVENUE",
-                    icon: Icon(Icons.attach_money, color: Colors.green),
-                  ),
+                  // CardDisplay(
+                  //   title: "WORKED",
+                  //   icon: Icon(Icons.timer_outlined, color: Colors.blue),
+                  // ),
+                  // CardDisplay(
+                  //   title: "REVENUE",
+                  //   icon: Icon(Icons.attach_money, color: Colors.green),
+                  // ),
                 ],
               ),
               const SizedBox(height: 30),
               SizedBox(
                 height: 450,
                 child: ListView.builder(
-                  itemCount: 5,
+                  itemCount: 1,
                   itemBuilder: (context, index) {
                     return AssignedAreasCard();
                   },

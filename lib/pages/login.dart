@@ -123,22 +123,29 @@ class _LoginState extends State<Login> {
                         final (data, isSuccessful) = await service.login(
                           phoneController.text.replaceAll(RegExp(r'\s+'), ''),
                         );
-
+                        if (data != null && isSuccessful) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (ctx) => OtpForm(
+                                phone: phoneController.text.replaceAll(
+                                  RegExp(r'\s+'),
+                                  '',
+                                ),
+                              ),
+                            ),
+                          );
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              backgroundColor: Colors.red,
+                              content: Text("${data!['message']}"),
+                            ),
+                          );
+                        }
                         print("Login success: $isSuccessful");
 
                         if (!context.mounted) return;
-
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (ctx) => OtpForm(
-                              phone: phoneController.text.replaceAll(
-                                RegExp(r'\s+'),
-                                '',
-                              ),
-                            ),
-                          ),
-                        );
                       } catch (e) {
                         print("Navigation error: $e");
                       }
