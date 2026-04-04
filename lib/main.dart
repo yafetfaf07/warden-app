@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
     const storage = FlutterSecureStorage();
     final String? refreshToken = await storage.read(key: 'token');
     if (refreshToken != null && !JwtDecoder.isExpired(refreshToken)) {
-      print("TOKEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEENNNNNNNN: $refreshToken");
+      // print("TOKEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEENNNNNNNN: $refreshToken");
       return Dashboard(id: refreshToken);
     } else {
       // Token is missing or expired

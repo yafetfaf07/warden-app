@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:warden_app/api/auth.dart';
 import 'package:warden_app/components/app_bar.dart';
 import 'package:warden_app/components/assigned_areas_card.dart';
-import 'package:warden_app/components/card_display.dart';
 import 'package:warden_app/pages/camera_scan.dart';
 import 'package:warden_app/pages/report_page.dart';
 import 'package:warden_app/pages/walkin_page.dart';

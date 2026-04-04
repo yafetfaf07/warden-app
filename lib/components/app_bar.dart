@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:warden_app/api/auth.dart';
 
 class ParkingAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String username;
-  const ParkingAppBar({super.key, required this.username});
-
+   ParkingAppBar({super.key, required this.username});
+AuthService _service = AuthService();
   @override
   Size get preferredSize => const Size.fromHeight(80); // Slightly taller for better spacing
 
@@ -27,7 +28,11 @@ class ParkingAppBar extends StatelessWidget implements PreferredSizeWidget {
                 color: Colors.grey[200],
                 border: Border.all(color: Colors.white, width: 2),
               ),
-              child: const Icon(Icons.person, color: Color(0xFF1A1F36), size: 30),
+              child: const Icon(
+                Icons.person,
+                color: Color(0xFF1A1F36),
+                size: 30,
+              ),
             ),
             const SizedBox(width: 12),
 
@@ -57,27 +62,11 @@ class ParkingAppBar extends StatelessWidget implements PreferredSizeWidget {
             const Spacer(),
 
             // 3. Online Status Badge
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              decoration: BoxDecoration(
-                color: const Color(0xFFE8F5E9), // Light green
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Row(
-                children: [
-                  const Icon(Icons.wifi, size: 16, color: Color(0xFF2E7D32)),
-                  const SizedBox(width: 6),
-                  Text(
-                    "ONLINE",
-                    style: GoogleFonts.outfit(
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                      color: const Color(0xFF2E7D32),
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            IconButton(onPressed: () async{
+              final isSuccess = await _service.logout();
+              Navigator.of(context).pop();
+            }, icon: Icon(Icons.logout)),
+
             const SizedBox(width: 10),
           ],
         ),

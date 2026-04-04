@@ -140,7 +140,7 @@ class _WalkinPageState extends State<WalkinPage> {
                 child: Column(
                   children: [
                     Text(
-                      "Recent Checkouts",
+                      "List of Walkins",
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,

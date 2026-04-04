@@ -37,7 +37,43 @@ class AuthService {
       return (null, false);
     }
   }
+Future<bool> logoutWarden() async {
+  // Use 10.0.2.2 instead of localhost if testing on an Android Emulator
+  final String url = "http://localhost:3000/warden/logout";
+  
+  try {
+    // 1. Retrieve your stored token (using your existing helper)
+    final String? token = await getAccessToken();
 
+    if (token == null) {
+      print("Logout failed: No token found.");
+      return false;
+    }
+
+    // 2. Make the POST request
+    final response = await http.post(
+      Uri.parse(url),
+      headers: {
+        "Authorization": "Bearer $token",
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+      },
+    );
+
+    // 3. Check for success (usually 200 or 204 for logout)
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      print("Logout successful");
+      return true;
+    } else {
+      print("Logout failed with status: ${response.statusCode}");
+      print("Response body: ${response.body}");
+      return false;
+    }
+  } catch (e) {
+    print("Error during logout request: $e");
+    return false;
+  }
+}
   Future<(Map<String, dynamic>?, bool)> verify(
     String otp,
     String phoneNo,
